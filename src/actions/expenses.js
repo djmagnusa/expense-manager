@@ -47,4 +47,28 @@ export const editExpense = (id, updates) => ({ //prooviding no defaults as, if t
     updates
 });
 
+// SET_EXPENSES
+export const setExpenses = (expenses) => ({
+    type: 'SET_EXPENSES',
+    expenses
+});
+
+export const startSetExpenses = () => {
+    return (dispatch) => {
+        
+        return database.ref('expenses').once('value').then((snapshot) => {  //snapshot will give us an object structure and we have to make sure to convert that over to an array structure and return will return the promise to app.js file
+            const expenses = [];
+
+            snapshot.forEach((childSnapshot) => {
+                expenses.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+            });
+            
+            dispatch(setExpenses(expenses))
+        });
+    };
+};
+
 
