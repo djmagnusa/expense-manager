@@ -55,6 +55,14 @@ export const editExpense = (id, updates) => ({ //prooviding no defaults as, if t
     updates
 });
 
+export const startEditExpense = (id, updates) => {
+    return (dispatch) => {
+        return database.ref(`expenses/${id}`).update(updates).then(() => { //if we forget to write return here we wont be able t actually do smething after startEditExpense completes over inside of the test case
+            dispatch(editExpense(id, updates));
+        });
+    };
+}
+
 // SET_EXPENSES
 export const setExpenses = (expenses) => ({
     type: 'SET_EXPENSES',
@@ -78,6 +86,8 @@ export const startSetExpenses = () => {
         });
     };
 };
+
+
 
 
 
