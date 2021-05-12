@@ -40,6 +40,14 @@ export const removeExpense = ({ id } = {} ) => ({
     id
 });
 
+export const startRemoveExpense = ({ id } = {}) => { //async action hence returning a function
+    return (dispatch) => {
+        return database.ref(`expenses/${id}`).remove().then(() => { //returning promise
+            dispatch(removeExpense({ id }));
+        });
+    };
+};
+
 //EDIT_EXPENSE
 export const editExpense = (id, updates) => ({ //prooviding no defaults as, if there is no  id and updates then no need to call it
     type: 'EDIT_EXPENSE',
@@ -70,5 +78,6 @@ export const startSetExpenses = () => {
         });
     };
 };
+
 
 
