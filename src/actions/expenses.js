@@ -15,8 +15,10 @@ export const addExpense = (expense) => ({
 });
 
 export const startAddExpense = (expenseData = {}) => {
-    return (dispatch) => {  //returning a function here instead of object like others. This is not normal, this is possible cuz of redux-thunk
-        const {
+                                       //we can call getState to get the current state
+    return (dispatch, getState) => {  //returning a function here instead of object like others. This is not normal, this is possible cuz of redux-thunk
+        const uid = getState().auth.uid;
+        const {                       
             description = '',
             note = '',
             amount = 0,
@@ -25,7 +27,7 @@ export const startAddExpense = (expenseData = {}) => {
         
         const expense = { description, note, amount, createdAt };
         
-       return database.ref('expenses').push(expense).then((ref) => { //then callback with push gets called with a ref (i.e referenece)
+       return database.ref(`users/${uid}/expenses`).push(expense).then((ref) => { //then callback with push gets called with a ref (i.e referenece)
             dispatch(addExpense({
                 id: ref.key,
                 ...expense
@@ -41,8 +43,9 @@ export const removeExpense = ({ id } = {} ) => ({
 });
 
 export const startRemoveExpense = ({ id } = {}) => { //async action hence returning a function
-    return (dispatch) => {
-        return database.ref(`expenses/${id}`).remove().then(() => { //returning promise
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid;
+        return database.ref(`users/${uid}/expenses/${id}`).remove().then(() => { //returning promise
             dispatch(removeExpense({ id }));
         });
     };
@@ -56,8 +59,9 @@ export const editExpense = (id, updates) => ({ //prooviding no defaults as, if t
 });
 
 export const startEditExpense = (id, updates) => {
-    return (dispatch) => {
-        return database.ref(`expenses/${id}`).update(updates).then(() => { //if we forget to write return here we wont be able t actually do smething after startEditExpense completes over inside of the test case
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid;
+        return database.ref(`users/${uid}/expenses/${id}`).update(updates).then(() => { //if we forget to write return here we wont be able t actually do smething after startEditExpense completes over inside of the test case
             dispatch(editExpense(id, updates));
         });
     };
@@ -70,9 +74,9 @@ export const setExpenses = (expenses) => ({
 });
 
 export const startSetExpenses = () => {
-    return (dispatch) => {
-        
-        return database.ref('expenses').once('value').then((snapshot) => {  //snapshot will give us an object structure and we have to make sure to convert that over to an array structure and return will return the promise to app.js file
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid;
+        return database.ref(`users/${uid}/expenses`).once('value').then((snapshot) => {  //snapshot will give us an object structure and we have to make sure to convert that over to an array structure and return will return the promise to app.js file
             const expenses = [];
 
             snapshot.forEach((childSnapshot) => {
