@@ -1,31 +1,34 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Link, NavLink } from 'react-router-dom';
+import { Router, Route, Switch, Link, NavLink } from 'react-router-dom';
+import createHistory from 'history/createBrowserHistory'
 import ExpenseDashboardPage from '../components/ExpenseDashboardPage';
 import AddExpensePage from '../components/AddExpensePage'
 import EditExpensePage from '../components/EditExpensePage'
 import HelpPage from '../components/HelpPage';
 import NotFoundPage from '../components/NotFoundPage';
-import Header from '../components/Header';
+//import Header from '../components/Header';
 import LoginPage from '../components/LoginPage';
+import PrivateRoute from './PrivateRoute';
 
+export const history = createHistory();
 
 // whenever it matches the path provided it will render the component
 // BrowserRouter needs a single root element hence creating div
+//BrowserRouter already has history built in. So we are using own router and passing history prop
 const AppRouter = () => (
-    <BrowserRouter>
+    <Router history={history}> 
         <div>
-            <Header/>
             <Switch>
                 <Route path="/" component={LoginPage} exact={true}/> 
-                <Route path="/dashboard" component={ExpenseDashboardPage} />
-                <Route path="/create" component={AddExpensePage}/>
-                <Route path="/edit/:id" component={EditExpensePage} />
+                <PrivateRoute path="/dashboard" component={ExpenseDashboardPage} />
+                <PrivateRoute path="/create" component={AddExpensePage}/>
+                <PrivateRoute path="/edit/:id" component={EditExpensePage} />
                 <Route path="/help" component={HelpPage} />
                 <Route component={NotFoundPage} />
             </Switch>
         </div>
         
-    </BrowserRouter>
+    </Router>
 );
 
 export default AppRouter
