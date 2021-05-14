@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom'
 import Header from '../components/Header'
@@ -12,17 +12,19 @@ export const PrivateRoute = ({  //unconnect component
         isAuthenticated ? (
             <div>
                 <Header />
-                <Component {...props}/>
+                <Component {...props} />
             </div>
             
-        ): (
+        ) : (
             <Redirect to="/" />
         )
     )} />
 );
+
 
 const mapStateToProps = (state) => ({ //implicitly returning an object
     isAuthenticated: !!state.auth.uid
 });
 
 export default connect(mapStateToProps)(PrivateRoute);
+
