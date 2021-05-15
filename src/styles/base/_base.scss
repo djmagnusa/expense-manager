@@ -1,3 +1,7 @@
+* {
+   box-sizing: border-box; //by default this is content box which adds padding in the height 
+}
+
 html {
     font-size: 62.5%;
 }
