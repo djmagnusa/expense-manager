@@ -1,16 +1,20 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 
 //Link avoids full page refresh when the link is clicked. It makes the browser look for client side routing
 //NavLink is used for styling active links
 export const Header = ({ startLogout }) => ( //exporting unconnected version
-    <header>
-        <h1>Expensify</h1>
-        <NavLink to="/dashboard" activeClassName="is-active">Dashboard</NavLink> 
-        <NavLink to="/create" activeClassName="is-active">Create Expense</NavLink>
-        <button onClick={startLogout}>Logout</button>
+    <header className="header">    
+        <div className="content-container">
+            <div className="header__content">  
+                <Link className="header__title" to="/dashboard">
+                    <h1>Expense Manager</h1>
+                </Link> 
+                <button onClick={startLogout}>Logout</button>
+            </div>
+        </div>
     </header>
 );
 
